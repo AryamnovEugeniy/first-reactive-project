@@ -1,7 +1,21 @@
 import React from 'react';
-import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-material-ui';
+import {
+    Grid,
+    Table,
+    TableHeaderRow,
+    TableEditRow,
+    TableEditColumn,
+    PagingPanel,
+} from '@devexpress/dx-react-grid-material-ui';
 import Paper from '@material-ui/core/Paper';
 import appointments from './data';
+import {
+    PagingState,
+    IntegratedPaging,
+    SortingState,
+    IntegratedSorting,
+    EditingState,
+} from '@devexpress/dx-react-grid';
 
 const styles = {
     'Room 1': {
@@ -15,11 +29,13 @@ const styles = {
     },
 };
 
+const getRowId = row => row.id;
+
 const TableRow = ({ row, ...restProps }) => (
     <Table.Row
         {...restProps}
         // eslint-disable-next-line no-alert
-        onClick={() => alert(JSON.stringify(row))}
+        onClick={() => alert(row.title)}
         style={{
             cursor: 'pointer',
             ...styles[row.location],
@@ -36,58 +52,96 @@ export default class Main extends React.PureComponent {
             columns: [
                 { name: 'id', title: 'ID' },
                 { name: 'title', title: 'Title' },
-                { name: 'startDate', title: 'Start Date' },
-                { name: 'endDate', title: 'end Date' },
+                {
+                    name: 'startDate',
+                    title: 'Start Date',
+                    getCellValue: row => (row.startDate ? row.startDate.toLocaleString() : undefined)
+                },
+                {
+                    name: 'endDate',
+                    title: 'end Date',
+                    getCellValue: row => (row.endDate ? row.endDate.toLocaleString() : undefined)
+                },
                 { name: 'location', title: 'Location' },
-                { name: 'progress', title: 'Progress'},
+                { name: 'progress', title: 'Progress' },
+            ],
+            editingColumnExtensions: [
+
             ],
             rows: appointments.map((appointment) => {
                 return ({
                     id: appointment.id,
                     title: appointment.title,
-                    startDate: appointment.startDate.toLocaleString(),
+                    startDate: appointment.startDate,
                     endDate: appointment.endDate.toLocaleString(),
                     location: appointment.location,
                     progress: appointment.progress,
                     description: appointment.description,
 
                 });
-            })
+            }),
+            sorting: [{ columnName: 'title', direction: 'asc' }],
         };
+        this.commitChanges = this.commitChanges.bind(this);
     }
+
+    commitChanges({ added, changed, deleted }) {
+        let { rows } = this.state;
+        if (added) {
+            const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
+            rows = [
+              ...rows,
+              ...added.map((row, index) => ({
+                id: startingAddedId + index,
+                ...row,
+              })),
+            ];
+          }
+          if (changed) {
+            rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+          }
+          if (deleted) {
+            const deletedSet = new Set(deleted);
+            rows = rows.filter(row => !deletedSet.has(row.id));
+          }
+          this.setState({ rows });
+    }
+
     render() {
-        const { rows, columns } = this.state;
+        const { rows, columns, sorting } = this.state;
         return (
             <Paper>
                 <Grid
                     rows={rows}
                     columns={columns}
+                    getRowId={getRowId}
                 >
+                    <EditingState
+                        onCommitChanges={this.commitChanges}
+                    />
+                    <SortingState
+                        sorting={sorting}
+                        onSortingChange={this.changeSorting}
+                    />
+                    <IntegratedSorting />
+                    <PagingState
+                        defaultCurrentPage={0}
+                        pageSize={6}
+                    />
+                    <IntegratedPaging />
                     <Table
                         rowComponent={TableRow}
                     />
                     <TableHeaderRow />
+                    <TableEditRow />
+                    <TableEditColumn
+                        showAddCommand
+                        showEditCommand
+                        showDeleteCommand
+                    />
+                    <PagingPanel />
                 </Grid>
             </Paper>
         );
     }
 }
-
-/*return (
-        <React.Fragment>
-            <Grid
-                rows={[
-                    { id: 0, product: 'DevExtreme', owner: 'DevExpress' },
-                    { id: 1, product: 'DevExtreme Reactive', owner: 'DevExpress' },
-                    { id: 2, product: 'Another product', owner: 'Some owner'}
-                ]}
-                columns={[
-                    { name: 'id', title: 'ID' },
-                    { name: 'product', title: 'Product' },
-                    { name: 'owner', title: 'Owner' },
-                ]}>
-                <Table />
-                <TableHeaderRow />
-            </Grid>
-        </React.Fragment>
-    );*/
