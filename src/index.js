@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Main from './app/main';
+import AppointmentsGrid from './app/main';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 ReactDOM.render(
     <Router>
         <Route exact path="/" component={App} />
-        <Route path="/main" component={Main} />
+        <Route path="/main" component={AppointmentsGrid} />
     </Router>,
     document.getElementById('root')
 );

@@ -6,6 +6,7 @@ import {
     TableEditRow,
     TableEditColumn,
     PagingPanel,
+    TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
 import Paper from '@material-ui/core/Paper';
 import appointments from './data';
@@ -15,7 +16,11 @@ import {
     SortingState,
     IntegratedSorting,
     EditingState,
+    RowDetailState,
 } from '@devexpress/dx-react-grid';
+import RowDetail from './row-details';
+
+
 
 const styles = {
     'Room 1': {
@@ -43,7 +48,7 @@ const TableRow = ({ row, ...restProps }) => (
     />
 );
 
-export default class Main extends React.PureComponent {
+export default class AppointmentsGrid extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -80,9 +85,11 @@ export default class Main extends React.PureComponent {
 
                 });
             }),
-            sorting: [{ columnName: 'title', direction: 'asc' }],
+            sorting: [{ columnName: 'id', direction: 'asc' }],
+            expandedRowIds: [],
         };
         this.commitChanges = this.commitChanges.bind(this);
+        this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds });
     }
 
     commitChanges({ added, changed, deleted }) {
@@ -108,7 +115,7 @@ export default class Main extends React.PureComponent {
     }
 
     render() {
-        const { rows, columns, sorting } = this.state;
+        const { rows, columns, sorting,  expandedRowIds} = this.state;
         return (
             <Paper>
                 <Grid
@@ -129,6 +136,10 @@ export default class Main extends React.PureComponent {
                         pageSize={6}
                     />
                     <IntegratedPaging />
+                    <RowDetailState
+                        expandedRowIds={expandedRowIds}
+                        onExpandedRowIdsChange={this.changeExpandedDetails}
+                    />
                     <Table
                         rowComponent={TableRow}
                     />
@@ -138,6 +149,9 @@ export default class Main extends React.PureComponent {
                         showAddCommand
                         showEditCommand
                         showDeleteCommand
+                    />
+                    <TableRowDetail
+                        contentComponent={RowDetail}
                     />
                     <PagingPanel />
                 </Grid>
