@@ -1,7 +1,7 @@
 import React from 'react';
 import { Scheduler, DayView, Appointments } from '@devexpress/dx-react-scheduler-material-ui';
 
-class AppoinmentsScheduler extends React.PureComponent {
+export default class AppoinmentsScheduler extends React.PureComponent {
 
     render() {
         return (

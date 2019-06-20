@@ -24,6 +24,9 @@ import {
 } from '@devexpress/dx-react-grid';
 import RowDetail from './help/row-details';
 import TableRow from './help/table-row';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import DateAndTimePicker from './help/date-and-time-picker';
 
 const getChildGroups = groups => groups
   .map(group => ({ key: group.key, childRows: group.items }));
@@ -47,7 +50,7 @@ export default class AppointmentsGrid extends React.PureComponent {
                 {
                     name: 'endDate',
                     title: 'end Date',
-                    getCellValue: row => (row.endDate ? row.endDate.toLocaleString() : undefined)
+                    getCellValue: row => (row.endDate ? row.startDate.toLocaleString() : undefined)
                 },
                 { name: 'location', title: 'Location' },
                 { name: 'progress', title: 'Progress' },
@@ -55,51 +58,17 @@ export default class AppointmentsGrid extends React.PureComponent {
             editingColumnExtensions: [
 
             ],
-            rows: appointments.map((appointment) => {
-                return ({
-                    id: appointment.id,
-                    title: appointment.title,
-                    startDate: appointment.startDate,
-                    endDate: appointment.endDate,
-                    location: appointment.location,
-                    progress: appointment.progress,
-                    description: appointment.description,
-
-                });
-            }),
             sorting: [{ columnName: 'id', direction: 'asc' }],
             expandedRowIds: [],
             grouping: [{ columnName: 'location' }],
         };
-        this.commitChanges = this.commitChanges.bind(this);
         this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds });
         this.changeSorting = sorting => this.setState({ sorting });
     }
 
-    commitChanges({ added, changed, deleted }) {
-        let { rows } = this.state;
-        if (added) {
-            const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
-            rows = [
-              ...rows,
-              ...added.map((row, index) => ({
-                id: startingAddedId + index,
-                ...row,
-              })),
-            ];
-          }
-          if (changed) {
-            rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
-          }
-          if (deleted) {
-            const deletedSet = new Set(deleted);
-            rows = rows.filter(row => !deletedSet.has(row.id));
-          }
-          this.setState({ rows });
-    }
-
     render() {
-        const { rows, columns, sorting,  expandedRowIds, grouping} = this.state;
+        const { columns, sorting,  expandedRowIds, grouping} = this.state;
+        const rows = this.props.rows;
         return (
             <Paper>
                 <Grid
@@ -107,10 +76,8 @@ export default class AppointmentsGrid extends React.PureComponent {
                     columns={columns}
                     getRowId={getRowId}
                 >
-                    
-                    
                     <EditingState
-                        onCommitChanges={this.commitChanges}
+                        onCommitChanges={this.props.commitChanges}
                     />
                     <SortingState
                         sorting={sorting}
