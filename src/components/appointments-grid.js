@@ -9,7 +9,7 @@ import {
     TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
 import Paper from '@material-ui/core/Paper';
-import appointments from './data';
+import appointments from './help/data';
 import {
     PagingState,
     IntegratedPaging,
@@ -18,35 +18,10 @@ import {
     EditingState,
     RowDetailState,
 } from '@devexpress/dx-react-grid';
-import RowDetail from './row-details';
-
-
-
-const styles = {
-    'Room 1': {
-        backgroundColor: '#ff4c5b',
-    },
-    'Room 2': {
-        backgroundColor: '#a2e2a4',
-    },
-    'Room 3': {
-        backgroundColor: '#b3e5fc',
-    },
-};
+import RowDetail from './help/row-details';
+import TableRow from './help/table-row';
 
 const getRowId = row => row.id;
-
-const TableRow = ({ row, ...restProps }) => (
-    <Table.Row
-        {...restProps}
-        // eslint-disable-next-line no-alert
-        onClick={() => alert(row.title)}
-        style={{
-            cursor: 'pointer',
-            ...styles[row.location],
-        }}
-    />
-);
 
 export default class AppointmentsGrid extends React.PureComponent {
 
@@ -90,6 +65,7 @@ export default class AppointmentsGrid extends React.PureComponent {
         };
         this.commitChanges = this.commitChanges.bind(this);
         this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds });
+        this.changeSorting = sorting => this.setState({ sorting });
     }
 
     commitChanges({ added, changed, deleted }) {
@@ -143,7 +119,8 @@ export default class AppointmentsGrid extends React.PureComponent {
                     <Table
                         rowComponent={TableRow}
                     />
-                    <TableHeaderRow />
+                    <TableHeaderRow 
+                        showSortingControls/>
                     <TableEditRow />
                     <TableEditColumn
                         showAddCommand
