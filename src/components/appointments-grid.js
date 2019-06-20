@@ -23,7 +23,8 @@ import {
 } from '@devexpress/dx-react-grid';
 import RowDetail from './help/row-details';
 import TableRow from './help/table-row';
-import DateAndTimePicker from './help/date-and-time-picker';
+import DateProvider from './help/date-provider';
+import LocationProvider from './help/location-provider';
 
 const getChildGroups = groups => groups
     .map(group => ({ key: group.key, childRows: group.items }));
@@ -57,14 +58,15 @@ export default class AppointmentsGrid extends React.PureComponent {
             ],
             sorting: [{ columnName: 'id', direction: 'asc' }],
             expandedRowIds: [],
-            grouping: [{ columnName: 'location' }],
+            grouping: [{ columnName: 'progress' }],
+            dateColumns: ['startDate', 'endDate'],
         };
         this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds });
         this.changeSorting = sorting => this.setState({ sorting });
     }
 
     render() {
-        const { columns, sorting, expandedRowIds, grouping } = this.state;
+        const { columns, sorting, expandedRowIds, grouping, dateColumns } = this.state;
         const rows = this.props.rows;
         return (
             <Paper>
@@ -73,6 +75,8 @@ export default class AppointmentsGrid extends React.PureComponent {
                     columns={columns}
                     getRowId={getRowId}
                 >
+                    <DateProvider
+                        for={dateColumns} />
                     <EditingState
                         onCommitChanges={this.props.commitChanges}
                     />
@@ -120,19 +124,34 @@ export default class AppointmentsGrid extends React.PureComponent {
     }
 }
 
-const DateCell = ({ value, style, ...restProps }) => (
+const LocationCell = ({ value, style, ...restProps }) => {
+    let location = undefined;
+    let alt = undefined;
+    if (value === 'Room 1') {
+        location = "https://upload.wikimedia.org/wikipedia/commons/1/15/Grand_Kremlin_Palace_Georgievsky_hall.jpg";
+        alt="Room 1";
+    }
+    else if (value === 'Room 2') {
+        location = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/St._George_hall2.jpg/800px-St._George_hall2.jpg";
+        alt="Room 1";
+    }
+    else if (value === 'Room 3') {
+        location = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/St._George_hall4.jpg/800px-St._George_hall4.jpg";
+        alt="Room 1";
+    }
+    return (
     <Table.Cell
         {...restProps}
     >
-        <DateAndTimePicker 
-            value={value}/>
+        <img src={location} alt={alt} height="125px"/>
     </Table.Cell>
-);
+    );
+}
 
 const Cell = (props) => {
     const { column } = props;
-    if (column.name === 'endDate' || column.name === 'startDate') {
-        return <DateCell {...props} />;
+    if (column.name === 'location') {
+        return <LocationCell {...props}/>;
     }
     return <Table.Cell {...props} />;
 };

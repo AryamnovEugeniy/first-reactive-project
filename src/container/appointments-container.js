@@ -8,18 +8,7 @@ export default class AppoinmentsContainer extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            rows: appointments.map((appointment) => {
-                return ({
-                    id: appointment.id,
-                    title: appointment.title,
-                    startDate: appointment.startDate,
-                    endDate: appointment.endDate,
-                    location: appointment.location,
-                    progress: appointment.progress,
-                    description: appointment.description,
-
-                });
-            }),
+            rows: appointments,
         };
         this.commitChanges = this.commitChanges.bind(this);
     }
