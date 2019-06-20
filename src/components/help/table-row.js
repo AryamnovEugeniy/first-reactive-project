@@ -18,8 +18,6 @@ const styles = {
 const TableRow = ({ row, ...restProps }) => (
     <Table.Row
         {...restProps}
-        // eslint-disable-next-line no-alert
-        onClick={() => alert(row.title)}
         style={{
             cursor: 'pointer',
             ...styles[row.location],

@@ -7,6 +7,7 @@ import {
     TableEditColumn,
     PagingPanel,
     TableRowDetail,
+    TableGroupRow,
 } from '@devexpress/dx-react-grid-material-ui';
 import Paper from '@material-ui/core/Paper';
 import appointments from './help/data';
@@ -17,9 +18,15 @@ import {
     IntegratedSorting,
     EditingState,
     RowDetailState,
+    GroupingState,
+    CustomGrouping,
+    IntegratedGrouping,
 } from '@devexpress/dx-react-grid';
 import RowDetail from './help/row-details';
 import TableRow from './help/table-row';
+
+const getChildGroups = groups => groups
+  .map(group => ({ key: group.key, childRows: group.items }));
 
 const getRowId = row => row.id;
 
@@ -53,7 +60,7 @@ export default class AppointmentsGrid extends React.PureComponent {
                     id: appointment.id,
                     title: appointment.title,
                     startDate: appointment.startDate,
-                    endDate: appointment.endDate.toLocaleString(),
+                    endDate: appointment.endDate,
                     location: appointment.location,
                     progress: appointment.progress,
                     description: appointment.description,
@@ -62,6 +69,7 @@ export default class AppointmentsGrid extends React.PureComponent {
             }),
             sorting: [{ columnName: 'id', direction: 'asc' }],
             expandedRowIds: [],
+            grouping: [{ columnName: 'location' }],
         };
         this.commitChanges = this.commitChanges.bind(this);
         this.changeExpandedDetails = expandedRowIds => this.setState({ expandedRowIds });
@@ -91,7 +99,7 @@ export default class AppointmentsGrid extends React.PureComponent {
     }
 
     render() {
-        const { rows, columns, sorting,  expandedRowIds} = this.state;
+        const { rows, columns, sorting,  expandedRowIds, grouping} = this.state;
         return (
             <Paper>
                 <Grid
@@ -99,12 +107,20 @@ export default class AppointmentsGrid extends React.PureComponent {
                     columns={columns}
                     getRowId={getRowId}
                 >
+                    
+                    
                     <EditingState
                         onCommitChanges={this.commitChanges}
                     />
                     <SortingState
                         sorting={sorting}
                         onSortingChange={this.changeSorting}
+                    />
+                    <GroupingState
+                        grouping={grouping}
+                    />
+                    <IntegratedGrouping
+                        getChildGroups={getChildGroups}
                     />
                     <IntegratedSorting />
                     <PagingState
@@ -119,9 +135,11 @@ export default class AppointmentsGrid extends React.PureComponent {
                     <Table
                         rowComponent={TableRow}
                     />
+                    <TableGroupRow />
                     <TableHeaderRow 
                         showSortingControls/>
                     <TableEditRow />
+                    
                     <TableEditColumn
                         showAddCommand
                         showEditCommand
