@@ -10,7 +10,6 @@ import {
     TableGroupRow,
 } from '@devexpress/dx-react-grid-material-ui';
 import Paper from '@material-ui/core/Paper';
-import appointments from './help/data';
 import {
     PagingState,
     IntegratedPaging,
@@ -24,12 +23,10 @@ import {
 } from '@devexpress/dx-react-grid';
 import RowDetail from './help/row-details';
 import TableRow from './help/table-row';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import DateAndTimePicker from './help/date-and-time-picker';
 
 const getChildGroups = groups => groups
-  .map(group => ({ key: group.key, childRows: group.items }));
+    .map(group => ({ key: group.key, childRows: group.items }));
 
 const getRowId = row => row.id;
 
@@ -67,7 +64,7 @@ export default class AppointmentsGrid extends React.PureComponent {
     }
 
     render() {
-        const { columns, sorting,  expandedRowIds, grouping} = this.state;
+        const { columns, sorting, expandedRowIds, grouping } = this.state;
         const rows = this.props.rows;
         return (
             <Paper>
@@ -101,12 +98,13 @@ export default class AppointmentsGrid extends React.PureComponent {
                     />
                     <Table
                         rowComponent={TableRow}
+                        cellComponent={Cell}
                     />
                     <TableGroupRow />
-                    <TableHeaderRow 
-                        showSortingControls/>
+                    <TableHeaderRow
+                        showSortingControls />
                     <TableEditRow />
-                    
+
                     <TableEditColumn
                         showAddCommand
                         showEditCommand
@@ -121,3 +119,20 @@ export default class AppointmentsGrid extends React.PureComponent {
         );
     }
 }
+
+const DateCell = ({ value, style, ...restProps }) => (
+    <Table.Cell
+        {...restProps}
+    >
+        <DateAndTimePicker 
+            value={value}/>
+    </Table.Cell>
+);
+
+const Cell = (props) => {
+    const { column } = props;
+    if (column.name === 'endDate' || column.name === 'startDate') {
+        return <DateCell {...props} />;
+    }
+    return <Table.Cell {...props} />;
+};
