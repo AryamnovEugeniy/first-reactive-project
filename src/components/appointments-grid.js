@@ -29,6 +29,18 @@ import DateProvider from './help/date-provider';
 
 const getRowId = row => row.id;
 
+const startDatePredicate = (value, filter) => {
+    let filterDate = new Date(filter.value);
+    let valueDate = new Date(value);
+    return valueDate >= filterDate;
+};
+
+const endDatePredicate = (value,filter) => {
+    let filterDate = new Date(filter.value);
+    let valueDate = new Date(value);
+    return valueDate <= filterDate;
+}
+
 export default class AppointmentsGrid extends React.PureComponent {
 
     constructor(props) {
@@ -49,8 +61,9 @@ export default class AppointmentsGrid extends React.PureComponent {
                 { name: 'location', title: 'Location' },
                 { name: 'progress', title: 'Progress' },
             ],
-            editingColumnExtensions: [
-
+            integratedFilteringColumnExtensions: [
+                { columnName: 'startDate', predicate: startDatePredicate },
+                { columnName: 'endDate', predicate: endDatePredicate },
             ],
             sorting: [{ columnName: 'id', direction: 'asc' }],
             expandedRowIds: [],
@@ -72,7 +85,10 @@ export default class AppointmentsGrid extends React.PureComponent {
                     getRowId={getRowId}
                 >
                     <DateProvider
-                        for={dateColumns} />
+                        for={'startDate'} />
+                    <DateProvider
+                        for={'endDate'}
+                    />
                     <EditingState
                         onCommitChanges={this.props.commitChanges}
                     />
@@ -95,7 +111,7 @@ export default class AppointmentsGrid extends React.PureComponent {
                         onExpandedRowIdsChange={this.changeExpandedDetails}
                     />
                     <FilteringState defaultFilters={[]} />
-                    <IntegratedFiltering />
+                    <IntegratedFiltering columnExtensions={this.state.integratedFilteringColumnExtensions} />
                     <Table
                         rowComponent={TableRow}
                         cellComponent={Cell}
@@ -114,7 +130,8 @@ export default class AppointmentsGrid extends React.PureComponent {
                         contentComponent={RowDetail}
                     />
                     <PagingPanel />
-                    <TableFilterRow />
+                    <TableFilterRow
+                    />
                 </Grid>
             </Paper>
         );
