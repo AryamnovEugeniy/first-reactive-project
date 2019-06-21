@@ -16,10 +16,11 @@ export default class AppoinmentsContainer extends React.PureComponent {
         this.state = {
             rows: appointments,
         };
-        this.commitChanges = this.commitChanges.bind(this);
+        this.commitChangesGrid = this.commitChangesGrid.bind(this);
+        this.commitChagesScheduler = this.commitChagesScheduler.bind(this);
     }
 
-    commitChanges({ added, changed, deleted }) {
+    commitChangesGrid({ added, changed, deleted }) {
         let { rows } = this.state;
         if (added) {
             const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
@@ -35,9 +36,32 @@ export default class AppoinmentsContainer extends React.PureComponent {
             rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
         }
         if (deleted) {
-            rows = rows.filter(appointment => appointment.id !== deleted);
+            const deletedSet = new Set(deleted);
+            rows = rows.filter(row => !deletedSet.has(row.id));
         }
         this.setState({ rows });
+    }
+
+    commitChagesScheduler({ added, changed, deleted }) {
+        alert(added);
+        alert(changed);
+        alert(deleted);
+        this.setState((state) => {
+            let { rows } = state;
+            if (added !== undefined) {
+              const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
+              rows = [...rows, { id: startingAddedId, ...added }];
+            }
+            if (changed !== undefined) {
+                rows = rows.map(appointment => (
+                changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+            }
+            if (deleted !== undefined) {
+                alert(deleted);
+                rows = rows.filter(appointment => appointment.id !== deleted);
+            }
+            return { rows };
+          });
     }
 
     render() {
@@ -45,10 +69,10 @@ export default class AppoinmentsContainer extends React.PureComponent {
             <MuiThemeProvider theme={theme}>
                 <React.Fragment>
                     <AppointmentsGrid
-                        commitChanges={this.commitChanges}
+                        commitChanges={this.commitChangesGrid}
                         rows={this.state.rows} />
                     <AppoinmentsScheduler
-                        commitChanges={this.commitChanges}
+                        commitChanges={this.commitChagesScheduler}
                         data={this.state.rows} />
                 </React.Fragment>
             </MuiThemeProvider>
