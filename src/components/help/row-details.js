@@ -16,7 +16,8 @@ const RowDetail = ({ row }) => {
         <div>
             {row.description}
             <Paper>
-                <Chart
+                <Chart 
+                    height="200px"
                     data={data}
                 >
                     <PieSeries

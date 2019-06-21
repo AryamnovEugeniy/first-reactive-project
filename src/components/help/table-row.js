@@ -2,16 +2,17 @@ import React from 'react';
 import {
     Table,
 } from '@devexpress/dx-react-grid-material-ui';
+import * as Colors from './colors';
 
 const styles = {
     'Room 1': {
-        backgroundColor: '#ff4c5b',
+        backgroundColor: Colors.COLOR_OF_THE_LOCATION1,
     },
     'Room 2': {
-        backgroundColor: '#a2e2a4',
+        backgroundColor: Colors.COLOR_OF_THE_LOCATION2,
     },
     'Room 3': {
-        backgroundColor: '#b3e5fc',
+        backgroundColor: Colors.COLOR_OF_THE_LOCATION3,
     },
 };
 
