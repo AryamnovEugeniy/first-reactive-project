@@ -2,6 +2,12 @@ import React from 'react';
 import AppointmentsGrid from '../components/appointments-grid';
 import appointments from '../components/help/data';
 import AppoinmentsScheduler from '../components/appointments-scheduler';
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { blue } from "@material-ui/core/colors";
+
+const theme = createMuiTheme({ palette: { type: "light", primary: blue } });
+
+
 
 export default class AppoinmentsContainer extends React.PureComponent {
 
@@ -21,28 +27,31 @@ export default class AppoinmentsContainer extends React.PureComponent {
                 ...rows,
                 ...added.map((row, index) => ({
                     id: startingAddedId + index,
-                ...row,
-              })),
+                    ...row,
+                })),
             ];
         }
         if (changed) {
             rows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
         }
         if (deleted) {
-            const deletedSet = new Set(deleted);
-            rows = rows.filter(row => !deletedSet.has(row.id));
+            rows = rows.filter(appointment => appointment.id !== deleted);
         }
         this.setState({ rows });
     }
 
     render() {
         return (
-            <React.Fragment>
-                <AppointmentsGrid 
-                    commitChanges={this.commitChanges}
-                    rows={this.state.rows}/>
-                <AppoinmentsScheduler />
-            </React.Fragment>
+            <MuiThemeProvider theme={theme}>
+                <React.Fragment>
+                    <AppointmentsGrid
+                        commitChanges={this.commitChanges}
+                        rows={this.state.rows} />
+                    <AppoinmentsScheduler
+                        commitChanges={this.commitChanges}
+                        data={this.state.rows} />
+                </React.Fragment>
+            </MuiThemeProvider>
         );
     }
 

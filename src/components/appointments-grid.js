@@ -18,13 +18,11 @@ import {
     EditingState,
     RowDetailState,
     GroupingState,
-    CustomGrouping,
     IntegratedGrouping,
 } from '@devexpress/dx-react-grid';
 import RowDetail from './help/row-details';
 import TableRow from './help/table-row';
 import DateProvider from './help/date-provider';
-import LocationProvider from './help/location-provider';
 
 const getChildGroups = groups => groups
     .map(group => ({ key: group.key, childRows: group.items }));
@@ -47,8 +45,8 @@ export default class AppointmentsGrid extends React.PureComponent {
                 },
                 {
                     name: 'endDate',
-                    title: 'end Date',
-                    getCellValue: row => (row.endDate ? row.startDate.toLocaleString() : undefined)
+                    title: 'End Date',
+                    getCellValue: row => (row.endDate ? row.endDate.toLocaleString() : undefined)
                 },
                 { name: 'location', title: 'Location' },
                 { name: 'progress', title: 'Progress' },
