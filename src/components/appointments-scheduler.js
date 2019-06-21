@@ -3,11 +3,13 @@ import {
     Scheduler,
     WeekView,
     MonthView,
+    DayView,
     Appointments,
     AppointmentForm,
     AppointmentTooltip,
     Toolbar,
     DateNavigator,
+    ViewSwitcher,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState, EditingState, } from '@devexpress/dx-react-scheduler';
 import { Paper } from '@material-ui/core';
@@ -24,11 +26,15 @@ export default class AppoinmentsScheduler extends React.PureComponent {
             appointmentChanges: {},
             editingAppointmentId: undefined,
             currentDate: this.props.data[0].startDate ? this.props.data[0].startDate : '2018-11-01',
+            currentViewName: {WeekView},
         }
         this.changeAddedAppointment = this.changeAddedAppointment.bind(this);
         this.changeAppointmentChanges = this.changeAppointmentChanges.bind(this);
         this.changeEditingAppointmentId = this.changeEditingAppointmentId.bind(this);
         this.currentDateChange = (currentDate) => { this.setState({ currentDate }); };
+        this.currentViewNameChange = (currentViewName) => {
+            this.setState({ currentViewName });
+        };
     }
 
     changeAddedAppointment(addedAppointment) {
@@ -73,7 +79,16 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                         startDayHour={9}
                         endDayHour={19}
                     />
+                    <WeekView
+                        name="Work Week"
+                        excludedDays={[0, 6]}
+                        startDayHour={9}
+                        endDayHour={19}
+                    />
+                    <MonthView />
+                    <DayView />
                     <Toolbar />
+                    <ViewSwitcher />
                     <DateNavigator />
                     <Appointments />
                     <AppointmentTooltip
