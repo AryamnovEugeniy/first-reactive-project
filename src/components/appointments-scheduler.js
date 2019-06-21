@@ -16,7 +16,6 @@ import { Paper } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import TooltipContent from './help/tooltip-content';
-import Header from './help/tooltip-header';
 
 
 export default class AppoinmentsScheduler extends React.PureComponent {
@@ -24,37 +23,18 @@ export default class AppoinmentsScheduler extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            addedAppointment: {},
-            appointmentChanges: {},
-            editingAppointmentId: undefined,
             currentDate: this.props.data[0].startDate ? this.props.data[0].startDate : '2018-11-01',
             currentViewName: {WeekView},
         }
-        this.changeAddedAppointment = this.changeAddedAppointment.bind(this);
-        this.changeAppointmentChanges = this.changeAppointmentChanges.bind(this);
-        this.changeEditingAppointmentId = this.changeEditingAppointmentId.bind(this);
         this.currentDateChange = (currentDate) => { this.setState({ currentDate }); };
         this.currentViewNameChange = (currentViewName) => {
             this.setState({ currentViewName });
         };
     }
 
-    changeAddedAppointment(addedAppointment) {
-        this.setState({ addedAppointment });
-    }
-
-    changeAppointmentChanges(appointmentChanges) {
-        this.setState({ appointmentChanges });
-    }
-
-    changeEditingAppointmentId(editingAppointmentId) {
-        this.setState({ editingAppointmentId });
-    }
-
-
     render() {
         const data = this.props.data;
-        const { addedAppointment, appointmentChanges, editingAppointmentId, currentDate } = this.state;
+        const { currentDate } = this.state;
         return (
             <Paper>
                 <Scheduler
@@ -68,14 +48,7 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                     <EditingState
                         onCommitChanges={this.props.commitChanges}
 
-                        addedAppointment={addedAppointment}
-                        onAddedAppointmentChange={this.changeAddedAppointment}
-
-                        appointmentChanges={appointmentChanges}
-                        onAppointmentChangesChange={this.changeAppointmentChanges}
-
-                        editingAppointmentId={editingAppointmentId}
-                        onEditingAppointmentIdChange={this.changeEditingAppointmentId}
+                        
                     />
                     <WeekView
                         startDayHour={9}

@@ -17,7 +17,7 @@ const DateFormatter = ({ value }) => <p>{value.toLocaleString()}</p>;
 const DateEditor = ({ value, onValueChange }) => (
     <DateAndTimePicker
         value={value} 
-        onChange={event => onValueChange(value)}/>
+        onChange={event => onValueChange(event.target.value)}/>
 );
 
 export default DateProvider;

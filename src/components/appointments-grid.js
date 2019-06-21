@@ -41,12 +41,10 @@ export default class AppointmentsGrid extends React.PureComponent {
                 {
                     name: 'startDate',
                     title: 'Start Date',
-                    getCellValue: row => (row.startDate ? row.startDate.toLocaleString() : undefined)
                 },
                 {
                     name: 'endDate',
                     title: 'End Date',
-                    getCellValue: row => (row.endDate ? row.endDate.toLocaleString() : undefined)
                 },
                 { name: 'location', title: 'Location' },
                 { name: 'progress', title: 'Progress' },

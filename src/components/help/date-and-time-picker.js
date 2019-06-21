@@ -19,7 +19,9 @@ function DateAndTimePicker(props) {
     const classes = withStyles(useStyles);
   
     return (
-        <form className={classes.container} noValidate>
+        <form 
+            className={classes.container} noValidate
+            >
             <TextField
                 id="datetime-local"
                 type="datetime-local"
@@ -28,6 +30,8 @@ function DateAndTimePicker(props) {
                 InputLabelProps={{
                     shrink: true,
                 }}
+                value={props.value}
+                onChange={props.onChange}
             />
         </form>
     );
