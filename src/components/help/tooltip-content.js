@@ -17,7 +17,6 @@ const TooltipContent = withStyles(style, { name: 'Content' })(({
       <Button
         variant="outlined"
         color="primary"
-        // eslint-disable-next-line no-alert
         onClick={() => console.log(appointmentData.description)}
       >
         Details

@@ -94,10 +94,9 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                     <DateNavigator />
                     <Appointments />
                     <AppointmentTooltip
+                        contentComponent={TooltipContent}
                         showOpenButton
                         showDeleteButton
-                        headerComponent={Header}
-                        contentComponent={TooltipContent}
                     />
                     
                     <AppointmentForm />
