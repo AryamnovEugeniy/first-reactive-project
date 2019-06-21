@@ -1,9 +1,14 @@
 import React from 'react';
-import { Scheduler,
-    WeekView, 
+import {
+    Scheduler,
+    WeekView,
+    MonthView,
     Appointments,
     AppointmentForm,
-    AppointmentTooltip, } from '@devexpress/dx-react-scheduler-material-ui';
+    AppointmentTooltip,
+    Toolbar,
+    DateNavigator,
+} from '@devexpress/dx-react-scheduler-material-ui';
 import { ViewState, EditingState, } from '@devexpress/dx-react-scheduler';
 import { Paper } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -12,18 +17,18 @@ import { withStyles } from '@material-ui/core/styles';
 
 export default class AppoinmentsScheduler extends React.PureComponent {
 
-    currentDate = '2018-11-01';
-
     constructor(props) {
         super(props);
         this.state = {
             addedAppointment: {},
             appointmentChanges: {},
             editingAppointmentId: undefined,
+            currentDate: this.props.data[0].startDate ? this.props.data[0].startDate : '2018-11-01',
         }
         this.changeAddedAppointment = this.changeAddedAppointment.bind(this);
         this.changeAppointmentChanges = this.changeAppointmentChanges.bind(this);
         this.changeEditingAppointmentId = this.changeEditingAppointmentId.bind(this);
+        this.currentDateChange = (currentDate) => { this.setState({ currentDate }); };
     }
 
     changeAddedAppointment(addedAppointment) {
@@ -41,7 +46,7 @@ export default class AppoinmentsScheduler extends React.PureComponent {
 
     render() {
         const data = this.props.data;
-        const { addedAppointment, appointmentChanges, editingAppointmentId, } = this.state;
+        const { addedAppointment, appointmentChanges, editingAppointmentId, currentDate } = this.state;
         return (
             <Paper>
                 <Scheduler
@@ -49,7 +54,8 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                     height={600}
                 >
                     <ViewState
-                        currentDate={data[0].startDate ? data[0].startDate : this.currentDate}
+                        currentDate={currentDate}
+                        onCurrentDateChange={this.currentDateChange}
                     />
                     <EditingState
                         onCommitChanges={this.props.commitChanges}
@@ -67,6 +73,8 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                         startDayHour={9}
                         endDayHour={19}
                     />
+                    <Toolbar />
+                    <DateNavigator />
                     <Appointments />
                     <AppointmentTooltip
                         showOpenButton
@@ -79,7 +87,7 @@ export default class AppoinmentsScheduler extends React.PureComponent {
     }
 
 }
-  
+
 
 const style = theme => ({
     todayCell: {

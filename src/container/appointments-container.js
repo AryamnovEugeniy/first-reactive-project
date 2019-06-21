@@ -43,25 +43,21 @@ export default class AppoinmentsContainer extends React.PureComponent {
     }
 
     commitChagesScheduler({ added, changed, deleted }) {
-        alert(added);
-        alert(changed);
-        alert(deleted);
         this.setState((state) => {
             let { rows } = state;
             if (added !== undefined) {
-              const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
-              rows = [...rows, { id: startingAddedId, ...added }];
+                const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
+                rows = [...rows, { id: startingAddedId, ...added }];
             }
             if (changed !== undefined) {
                 rows = rows.map(appointment => (
-                changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+                    changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
             }
             if (deleted !== undefined) {
-                alert(deleted);
                 rows = rows.filter(appointment => appointment.id !== deleted);
             }
             return { rows };
-          });
+        });
     }
 
     render() {
