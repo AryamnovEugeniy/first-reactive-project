@@ -15,6 +15,8 @@ import { ViewState, EditingState, } from '@devexpress/dx-react-scheduler';
 import { Paper } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
+import TooltipContent from './help/tooltip-content';
+import Header from './help/tooltip-header';
 
 
 export default class AppoinmentsScheduler extends React.PureComponent {
@@ -94,7 +96,10 @@ export default class AppoinmentsScheduler extends React.PureComponent {
                     <AppointmentTooltip
                         showOpenButton
                         showDeleteButton
+                        headerComponent={Header}
+                        contentComponent={TooltipContent}
                     />
+                    
                     <AppointmentForm />
                 </Scheduler>
             </Paper>
@@ -102,6 +107,7 @@ export default class AppoinmentsScheduler extends React.PureComponent {
     }
 
 }
+
 
 
 const style = theme => ({
